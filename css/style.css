@@ -1,0 +1,132 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  flex-direction: row;
+  min-height: 100%;
+}
+
+header {
+  height: 112px;
+  border: 1px solid black;
+}
+
+main {
+  background-color: #80C8BC;
+}
+
+.group-area {
+  border-radius: 20px;
+  background-color: #C38D9D;
+}
+
+.selector {
+  background-color: #FFFFFF;
+  margin-top: 13px;
+  margin-right: 11px;
+  margin-left: 11px;
+  margin-bottom: 17px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: start;
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  height: 50px;
+}
+
+.users-groups {
+  background-color: #FFFFFF;
+  margin-right: 11px;
+  margin-left: 11px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.text-area {
+  border-radius: 20px;
+  background-color: #C38D9D;
+  display: flex;
+  flex-flow: column;
+}
+
+.text-message {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  margin-top: 13px;
+  margin-right: 11px;
+  margin-left: 11px;
+  height: 85%;
+}
+
+.message-for-users {
+  margin-top: 13px;
+  margin-right: 11px;
+  margin-left: 11px;
+  height: 100%;
+}
+
+textarea {
+  width: 100%;
+  height: 85%;
+}
+
+.text-message-btn {
+  width: 150px;
+  height: 50px;
+  margin-bottom: 15px;
+  margin-right: 11px;
+  margin-left: 11px;
+}
+
+.ergebnis {
+  font-size: 2rem;
+  font-family: sans-serif;
+  padding: 2rem 0 2rem 2rem;
+}
+
+.toggle {
+  margin:0 0 0 2rem;
+  position: relative;
+  display: inline-block;
+  width: 6rem;
+  /* height: 3.4rem; */
+}
+
+.toggle input {
+  display: none;
+}
+
+.roundbutton {
+  width: 100%;
+  background-color: #33455e;
+  display: block;
+  transition: all 0.3s;
+  border-radius: 3.4rem;
+  cursor: pointer;
+  height: 35px;
+}
+
+.roundbutton:before {
+  position: absolute;
+  content: "";
+  height: 1.9rem;
+  width: 2rem;
+  border-radius: 100%;
+  display: block;
+  left: 0.5rem;
+  background-color: white;
+  transition: all 0.3s;
+  top: 2px;
+}
+
+input:checked + .roundbutton {
+  background-color: #FF6E48;
+}
+
+input:checked + .roundbutton:before  {
+  transform: translate(2.6rem, 0);
+}

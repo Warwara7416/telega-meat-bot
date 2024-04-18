@@ -1,154 +1,87 @@
-<?php
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
 
-ini_set('errore_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+  <header>
+    <div class="container-fluid">
+      Лого
+    </div>
+  </header>
 
-ini_set("xdebug.var_display_max_children", '-1');
-ini_set("xdebug.var_display_max_data", '-1');
-ini_set("xdebug.var_display_max_depth", '-1');
+  <main>
+    <div class="container">
+      <div class="row main-area">
 
-// 
-// Нужно для просмотра всех доступных на данный момент update
-// 
-// https://api.telegram.org/bot[токен бота]/getUpdates
-// 
+        <div class="col-4 group-area">
+          <div class="selector">
+            <div id="ergebnis" class="ergebnis">
+              <span id="status">Номера</span>
+            </div>
 
-// 
-// Уникальный токен бота
-// 
+            <label class="toggle">
+              <input id="toggleswitch" type="checkbox">
+              <span class="roundbutton"></span>
+            </label>
+          </div>
+          <ul id="myList" class="users-groups"></ul>
+          <?php 
+            require("get_all_phones.php");
+            $json = get_all_phones();
+          ?>
+          <script>
+            let data = <?php echo $json; ?>;
+            let list = document.getElementById("myList");
+            var input = document.getElementById('toggleswitch');
+            var outputtext = document.getElementById('status');
+            
+            input.addEventListener('change',function(){
+              if(this.checked) {
+                outputtext.innerHTML = "Группы";
+                for (i = 0; i < data.length; ++i) {
+                  let li = document.createElement('li');
+                  li.innerText = data[i][1];
+                  list.appendChild(li);
+                }
+              } else {
+                outputtext.innerHTML = "Номера";
+              }
+            });
+            for (i = 0; i < data.length; ++i) {
+              let li = document.createElement('li');
+              li.innerText = data[i][0];
+              list.appendChild(li);
+            }
+          </script>
+        </div>
 
-require_once("api/config.php");
-require("functions/id_telegram_check.php");
-require("functions/id_telegram_add.php");
-require("functions/id_last_update.php");
-require("functions/phone_number_check.php");
-require("functions/send_button.php");
-require("functions/rewrite_id_last_update.php");
-require("functions/phone_number_update.php");
-require("functions/get_all_update_data.php");
-// require("functions/write_log_file.php");
+        <div class="col-8 text-area">
+          <form class="message-for-users" action="catch_message.php" onsubmit="catch_message()" method="POST">
+            <label for="group-or-number"><b>Введите номер или группу</b></label>
+            <br>
+            <input type="text" name="group-or-number" id="group-or-number" placeholder="Номер или группа" required>
 
+            <textarea name="message-for-users" id="message-for-users" placeholder="Введите сообщение..." required></textarea>
 
+            <button type="submit">Отправить сообщение</button>
+          </form>
+          <!-- <button class="text-message-btn" type="submit" value="">Отправить</button> -->
+        </div>
+            
+      </div>
+    </div>
+  </main>
 
+  <footer>
 
-
-// 
-//Соединение с Базой Данных
-// 
-
-$connect = new mysqli(HOST, USER, PASSWORD, DATABASE);
-
-if ($connect->connect_error) {
-  exit("Ошибка подключения к Базе Данных: " . $connect->connect_error);
-}
-
-// 
-// Установка кодировки
-// 
-
-$connect->set_charset("utf8");
-
-// 
-// Получаем из БД id последнего update
-// 
-
-// $id_last_update = id_last_update($connect);
-
-
-set_time_limit(20);
-while (true == true) {
-
-  // 
-  // Получаем из БД id последнего update
-  // 
-
-  $id_last_update = id_last_update($connect);
-
-  $getQuery = array(
-    "offset" 	=> $id_last_update
-  );
-
-  $jsonData = get_all_update_data($getQuery);
-
-  $arrays_length = count($jsonData['result']);
-  
-  // $data = file_get_contents('php://input');
-  // $data = json_decode($data, true);
-
-  var_dump($jsonData);
-
-  $i = 0;
-  
-  if ($arrays_length > 1) {
-    $i++;
-  }
-
-  // 
-  // Получаем id пользователя после ввода команды /start.
-  // 
-
-  if ($jsonData["result"][$i]["message"]["text"] == '/start') {
-    $id_user = $jsonData["result"][$i]["message"]["from"]["id"];
-
-    echo "Попал в условие старт";
-
-    // 
-    // Проверяем, есть ли пользователь в БД.
-    // 
-
-    $id_telegram_check = id_telegram_check($connect, $id_user);
-
-    // 
-    // При отсутствии добавляем
-    // 
-
-    if ($id_telegram_check == 0) {
-      id_telegram_add($connect, $id_user);
-    }
-
-    // 
-    // Проверяем, записан ли номер телефона на id_telegram
-    // 
-
-    $phone_number_check = phone_number_check($connect, $id_user);
-    $phone_number_check = $phone_number_check[0];
-
-    if (is_null($phone_number_check) == true) {
-      echo "В условии null";
-
-      // 
-      // Отправляем пользователю кнопку, которая позволит получить номер телефона
-      // 
-
-      send_button($id_user);
-    }
-  }
-
-  $id_user = $jsonData["result"][$i]["message"]["from"]["id"];
-
-  // 
-  // Проверяем, получили ли мы номер от пользователя
-  // 
-
-  if (isset($jsonData["result"][$i]["message"]["contact"]["phone_number"]) and is_null($phone_number_check) == true) {
-    echo "В добавлении номера";
-    $phone_number = $jsonData["result"][$i]["message"]["contact"]["phone_number"];
-    $id_user = $jsonData["result"][$i]["message"]["contact"]["user_id"];
-
-    phone_number_update($connect, $id_user, $phone_number);
-  }
-
-  // 
-  // Берем id последнего update и заносим в БД 
-  // 
-
-  // $rewrite_id_last_update = $jsonData["result"][$i]["update_id"];
-  // rewrite_id_last_update($connect, $rewrite_id_last_update);
-
-  // if ($i < $arrays_length - 1) {
-  //   $i++;
-  // }
-}
-
-mysqli_close($connect);
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="toogle_button.js"></script>
+</body>
+</html>

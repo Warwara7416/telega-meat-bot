@@ -10,6 +10,6 @@ function id_telegram_check ($connect, $id_user) {
   mysqli_stmt_execute($stmt);
   mysqli_stmt_bind_result($stmt, $id_telegram_check);
   mysqli_stmt_fetch($stmt);
-
+  
   return $id_telegram_check;
 }

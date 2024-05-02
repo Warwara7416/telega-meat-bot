@@ -7,7 +7,7 @@ ini_set("xdebug.var_display_max_children", '-1');
 ini_set("xdebug.var_display_max_data", '-1');
 ini_set("xdebug.var_display_max_depth", '-1');
 
-function get_all_phones() {
+function get_all_groups() {
   require_once("api/config.php");
 
   $connect = new mysqli(HOST, USER, PASSWORD, DATABASE);
@@ -22,17 +22,17 @@ function get_all_phones() {
 
   $connect->set_charset("utf8");
 
-  $all_phones = "SELECT DISTINCT `phone_number` FROM `user_data` WHERE 1";
-  $data = mysqli_query($connect, $all_phones);
+  $all_groups = "SELECT DISTINCT `user_group` FROM `user_data`";
+  $data = mysqli_query($connect, $all_groups);
 
-  $phones = [];
+  $groups = [];
 
   while ($row = mysqli_fetch_row($data)) {
-    $phones[] = $row;
+    $groups[] = $row;
   }
   mysqli_close($connect);
 
-  $json = json_encode($phones);
+  $json = json_encode($groups);
 
   return($json);
 }

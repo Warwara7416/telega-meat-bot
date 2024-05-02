@@ -6,21 +6,27 @@
 
 .container {
   flex-direction: row;
-  min-height: 100%;
+  height: 100vh;
 }
 
 header {
   height: 112px;
-  border: 1px solid black;
+  background-color: #004e64;
 }
 
 main {
-  background-color: #80C8BC;
+  background-color: #004e64;
+}
+
+.main-area {
+  flex-wrap: nowrap !important;
+  gap: 10px;
 }
 
 .group-area {
   border-radius: 20px;
-  background-color: #C38D9D;
+  background-color: #20cab5;
+  height: 100%;
 }
 
 .selector {
@@ -48,9 +54,10 @@ main {
 
 .text-area {
   border-radius: 20px;
-  background-color: #C38D9D;
+  background-color: #20cab5;
   display: flex;
   flex-flow: column;
+  height: 330px;
 }
 
 .text-message {
@@ -66,12 +73,12 @@ main {
   margin-top: 13px;
   margin-right: 11px;
   margin-left: 11px;
-  height: 100%;
+  min-height: 300px;
 }
 
 textarea {
   width: 100%;
-  height: 50%;
+  height: 70%;
 }
 
 .text-message-btn {

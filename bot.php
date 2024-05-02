@@ -74,8 +74,6 @@ while (true == true) {
   if ($jsonData["result"][$i]["message"]["text"] == '/start') {
     $id_user = $jsonData["result"][$i]["message"]["from"]["id"];
 
-    echo "Попал в условие старт";
-
     // 
     // Проверяем, есть ли пользователь в БД.
     // 
@@ -98,7 +96,6 @@ while (true == true) {
     $phone_number_check = $phone_number_check[0];
 
     if ($phone_number_check == 0 and !($id_last_update == $jsonData["result"][$i]["update_id"])) {
-      echo "В условии null";
 
       // 
       // Отправляем пользователю кнопку, которая позволит получить номер телефона
@@ -118,7 +115,6 @@ while (true == true) {
   // 
 
   if (isset($jsonData["result"][$i]["message"]["contact"]["phone_number"]) and $phone_number_check == 0) {
-    echo "В добавлении номера";
     $phone_number = $jsonData["result"][$i]["message"]["contact"]["phone_number"];
     $id_user = $jsonData["result"][$i]["message"]["contact"]["user_id"];
 

@@ -15,8 +15,6 @@ if(isset($_POST['message-for-users']) and isset($_POST['group-or-number'])) {
   $message      = htmlspecialchars($_POST['message-for-users']);
   $destination  = htmlspecialchars($_POST['group-or-number']);
 
-  echo "Выполнено условие";
-
   $id_telegram = find_id_telegram($connect, $destination);
 
   while ($id_telegram) {
